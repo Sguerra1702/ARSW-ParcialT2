@@ -48,9 +48,12 @@ Por defecto, el manejador de órdenes tiene dos órdenes registradas para las me
 
 1. Configure su aplicación para que ofrezca el recurso "/orders", para esto:
    * Modifique la clase OrdersAPIController para que exponda el servicio REST necesario por medio de SpringMVC/SpringBoot.
+   ![](img/punto1.png)
+
 2. Configure su aplicación para que al realizar una petición GET, retorne -en formato jSON- el conjunto de todas las órdenes y sus totales, es decir, tiene que retornar el listado de todos los productos por Orden y un campo en donde aparezca el valor total de la cuenta.
 	
 	* Importante, para el calculo del total de cada orden debe utilizar la clase "edu.eci.arsw.myrestaurant.beans.impl.BasicBillCalculator" 
+	![](img/punto2.png)
 
 
 ### Bono

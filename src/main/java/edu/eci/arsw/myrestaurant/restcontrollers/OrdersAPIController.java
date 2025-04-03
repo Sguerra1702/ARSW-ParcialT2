@@ -19,10 +19,14 @@ package edu.eci.arsw.myrestaurant.restcontrollers;
 import edu.eci.arsw.myrestaurant.model.Order;
 import edu.eci.arsw.myrestaurant.model.ProductType;
 import edu.eci.arsw.myrestaurant.model.RestaurantProduct;
+import edu.eci.arsw.myrestaurant.services.OrderServicesException;
 import edu.eci.arsw.myrestaurant.services.RestaurantOrderServicesStub;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,7 +52,37 @@ public class OrdersAPIController {
     @GetMapping("/orders")
     public ResponseEntity<?> getOrders() {
         Map<Integer, Order> tableOrders = restaurantOrderServicesStub.getTableOrders();
-        return new ResponseEntity<>(tableOrders, HttpStatus.ACCEPTED);
+        Map<Integer, Map<String, Object>> ordersWithTotals = new HashMap<>();
+
+        tableOrders.forEach((tableNumber, order) -> {
+            Map<String, Object> orderDetails = new HashMap<>();
+            orderDetails.put("order", order);
+            try {
+                int total = restaurantOrderServicesStub.calculateTableBill(tableNumber);
+                orderDetails.put("total", total);
+            } catch (OrderServicesException e) {
+                orderDetails.put("total", "Error calculating total: " + e.getMessage());
+            }
+            ordersWithTotals.put(tableNumber, orderDetails);
+        });
+
+        return new ResponseEntity<>(ordersWithTotals, HttpStatus.ACCEPTED);
     }
+
+    @GetMapping("/getBill/{number}")
+    public ResponseEntity<?> getBill() {
+        int bill = 0;
+        try {
+            bill = restaurantOrderServicesStub.calculateTableBill(1);
+        } catch (OrderServicesException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Map<String, Object> billDetails = new HashMap<>();
+        billDetails.put("bill", bill);
+        return new ResponseEntity<>(billDetails, HttpStatus.ACCEPTED);
+    }
+    
+    
     
 }
