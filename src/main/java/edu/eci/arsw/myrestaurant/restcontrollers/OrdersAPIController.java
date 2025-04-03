@@ -23,8 +23,11 @@ import edu.eci.arsw.myrestaurant.services.RestaurantOrderServicesStub;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,7 +37,18 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author hcadavid
  */
+
+ @RestController
+ @RequestMapping("/restaurant")
 public class OrdersAPIController {
 
+    @Autowired
+    private RestaurantOrderServicesStub restaurantOrderServicesStub;
+
+    @GetMapping("/orders")
+    public ResponseEntity<?> getOrders() {
+        Map<Integer, Order> tableOrders = restaurantOrderServicesStub.getTableOrders();
+        return new ResponseEntity<>(tableOrders, HttpStatus.ACCEPTED);
+    }
     
 }

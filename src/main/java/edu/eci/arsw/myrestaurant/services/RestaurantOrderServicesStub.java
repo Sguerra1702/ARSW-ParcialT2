@@ -9,7 +9,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.stereotype.Service;
 
+@Service
 public class RestaurantOrderServicesStub implements RestaurantOrderServices {
 
     
@@ -80,9 +82,13 @@ public class RestaurantOrderServicesStub implements RestaurantOrderServices {
         }
     }
 
-    private static final Map<String, RestaurantProduct> productsMap;
+    public Map<Integer, Order> getTableOrders() {
+        return tableOrders;
+    }
 
-    private static final Map<Integer, Order> tableOrders;
+    public static final Map<String, RestaurantProduct> productsMap;
+
+    public static final Map<Integer, Order> tableOrders;
     
 
     static {
