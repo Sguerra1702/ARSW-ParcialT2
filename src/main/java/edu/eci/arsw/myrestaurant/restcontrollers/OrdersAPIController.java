@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  *
@@ -90,13 +91,13 @@ public class OrdersAPIController {
     }
 
     @GetMapping("/getBill/{number}")
-    public ResponseEntity<?> getBill() {
+    public ResponseEntity<?> getBill(@PathVariable("number") int number) {
         int bill = 0;
         try {
-            bill = restaurantOrderServicesStub.calculateTableBill(1);
+            bill = restaurantOrderServicesStub.calculateTableBill(number);
         } catch (OrderServicesException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
+            return new ResponseEntity<>("Error calculating bill: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         Map<String, Object> billDetails = new HashMap<>();
         billDetails.put("bill", bill);
