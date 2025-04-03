@@ -5,6 +5,7 @@ import edu.eci.arsw.myrestaurant.model.Order;
 import edu.eci.arsw.myrestaurant.model.RestaurantProduct;
 import edu.eci.arsw.myrestaurant.beans.BillCalculator;
 import edu.eci.arsw.myrestaurant.beans.impl.BasicBillCalculator;
+import edu.eci.arsw.myrestaurant.beans.impl.BillWithTaxesCalculator;
 import edu.eci.arsw.myrestaurant.model.ProductType;
 import java.util.Map;
 import java.util.Set;
@@ -16,10 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Service
 public class RestaurantOrderServicesStub implements RestaurantOrderServices {
 
+    @Autowired
     private BasicBillCalculator calc;
 
+    @Autowired
+    private BillWithTaxesCalculator calcWithTaxes;
+
     public RestaurantOrderServicesStub() {
-        calc = new BasicBillCalculator();
     }
 
     public void setBillCalculator(BasicBillCalculator calc) {
@@ -81,6 +85,15 @@ public class RestaurantOrderServicesStub implements RestaurantOrderServices {
             throw new OrderServicesException("Mesa inexistente o ya liberada:" + tableNumber);
         } else {
             return calc.calculateBill(tableOrders.get(tableNumber), productsMap);
+        }
+    }
+
+    @Override
+    public int calculateBillWithTaxes(int tableNumber) throws OrderServicesException {
+        if (!tableOrders.containsKey(tableNumber)) {
+            throw new OrderServicesException("Mesa inexistente o ya liberada:" + tableNumber);
+        } else {
+            return calcWithTaxes.calculateBill(tableOrders.get(tableNumber), productsMap);
         }
     }
 

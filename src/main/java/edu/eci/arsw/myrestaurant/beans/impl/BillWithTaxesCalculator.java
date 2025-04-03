@@ -4,15 +4,17 @@ import edu.eci.arsw.myrestaurant.model.Order;
 import edu.eci.arsw.myrestaurant.model.RestaurantProduct;
 import edu.eci.arsw.myrestaurant.beans.BillCalculator;
 import edu.eci.arsw.myrestaurant.beans.TaxesCalculator;
+import edu.eci.arsw.myrestaurant.beans.impl.colombia.StandardTaxesCalculator;
+
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+@Service
 public class BillWithTaxesCalculator implements BillCalculator {
 
 
-    TaxesCalculator taxescalc;
+    TaxesCalculator taxescalc = new StandardTaxesCalculator();
 
     @Override
     public int calculateBill(Order o, Map<String, RestaurantProduct> productsMap) {

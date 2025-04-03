@@ -69,6 +69,26 @@ public class OrdersAPIController {
         return new ResponseEntity<>(ordersWithTotals, HttpStatus.ACCEPTED);
     }
 
+    @GetMapping("/orders/taxes")
+    public ResponseEntity<?> getOrdersWithTaxes() {
+        Map<Integer, Order> tableOrders = restaurantOrderServicesStub.getTableOrders();
+        Map<Integer, Map<String, Object>> ordersWithTotals = new HashMap<>();
+
+        tableOrders.forEach((tableNumber, order) -> {
+            Map<String, Object> orderDetails = new HashMap<>();
+            orderDetails.put("order", order);
+            try {
+                int total = restaurantOrderServicesStub.calculateBillWithTaxes(tableNumber);
+                orderDetails.put("total with taxes", total);
+            } catch (OrderServicesException e) {
+                orderDetails.put("total", "Error calculating total: " + e.getMessage());
+            }
+            ordersWithTotals.put(tableNumber, orderDetails);
+        });
+
+        return new ResponseEntity<>(ordersWithTotals, HttpStatus.ACCEPTED);
+    }
+
     @GetMapping("/getBill/{number}")
     public ResponseEntity<?> getBill() {
         int bill = 0;
